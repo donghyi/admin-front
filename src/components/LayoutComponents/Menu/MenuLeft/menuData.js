@@ -1,9 +1,15 @@
 export default [
   {
-    title: 'Dashboard Alpha',
+    title: 'Dashboard',
     key: 'dashboardAlpha',
-    url: '/dashboard/alpha',
+    url: '/dashboard',
     icon: 'icmn icmn-stack',
+  },
+  {
+    title: 'Domain List Page',
+    key: 'domainlist',
+    url: '/domainlist',
+    icon: 'icmn icmn-list',
   },
   {
     title: 'Empty Page',

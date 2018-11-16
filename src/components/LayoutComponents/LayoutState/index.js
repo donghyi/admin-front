@@ -25,6 +25,7 @@ class LayoutState extends React.PureComponent {
       JSON.stringify(mergedParams),
       (key, value) => (value === 'true' ? true : value === 'false' ? false : value),
     )
+    console.log("booleanMergedParams = " , booleanMergedParams);
     dispatch(setLayoutState({ ...booleanMergedParams }))
   }
 

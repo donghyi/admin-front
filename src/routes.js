@@ -24,8 +24,13 @@ const loadableRoutes = {
 
 
   // Dashboards
-  '/dashboard/alpha': {
+  '/dashboard': {
     component: loadable(() => import('pages/Dashboard/DashboardAlphaPage')),
+  },
+
+  // Dashboards
+  '/domainlist': {
+    component: loadable(() => import('pages/DomainPages/DomainListPage')),
   },
 }
 
