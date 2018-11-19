@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { REDUCER, submit } from 'ducks/login'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 
 const FormItem = Form.Item
 
 const mapStateToProps = (state, props) => ({
-  isSubmitForm: state.app.submitForms[REDUCER],
+  isSubmitForm: state.app.submitForms['pending'],
+  isError : state.app.submitForms['error'],
 })
 
 @connect(mapStateToProps)
@@ -27,8 +28,15 @@ class LoginForm extends React.Component {
     }
   }
 
+  showErrorMessage = () => {
+    console.log("showErrorMessage")
+    message.error("로그인 실패!");
+  }
+
   render() {
-    const { form, isSubmitForm } = this.props
+    console.log("this.props = ", this.props);
+    const { showErrorMessage } = this;
+    const { form, isSubmitForm, isError } = this.props
 
     return (
       <div className="cat__pages__login__block__form">
@@ -58,6 +66,9 @@ class LoginForm extends React.Component {
               rules: [{ required: true, message: 'Please input your password' }],
             })(<Input size="default" type="password" />)}
           </FormItem>
+          <div className="mb-2">
+          {isError && showErrorMessage()}
+          </div>
           <div className="mb-2">
             <a href="javascript: void(0);" className="utils__link--blue utils__link--underlined">
               Forgot password
