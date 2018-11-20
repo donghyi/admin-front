@@ -4,26 +4,26 @@ import { pendingTask, begin, end } from 'react-redux-spinner'
 import { notification } from 'antd'
 import * as api from 'lib/api';
 
-const REDUCER = 'app'
-const NS = `@@${REDUCER}/`
+const REDUCER = 'app';
+const NS = `@@${REDUCER}/`;
 
-const _setFrom = createAction(`${NS}SET_FROM`)
-const _setLoading = createAction(`${NS}SET_LOADING`)
-const _setHideLogin = createAction(`${NS}SET_HIDE_LOGIN`)
+const _setFrom = createAction(`${NS}SET_FROM`);
+const _setLoading = createAction(`${NS}SET_LOADING`);
+const _setHideLogin = createAction(`${NS}SET_HIDE_LOGIN`);
 
-const _loginAuthPending = createAction(`${NS}LOGIN_AUTH_PENDING`)
-const _loginAuthSuccess = createAction(`${NS}LOGIN_AUTH_SUCCESS`)
-const _loginAuthFailure = createAction(`${NS}LOGIN_AUTH_FAILURE`)
+const _loginAuthPending = createAction(`${NS}LOGIN_AUTH_PENDING`);
+const _loginAuthSuccess = createAction(`${NS}LOGIN_AUTH_SUCCESS`);
+const _loginAuthFailure = createAction(`${NS}LOGIN_AUTH_FAILURE`);
 
-export const setUserState = createAction(`${NS}SET_USER_STATE`)
-export const setUpdatingContent = createAction(`${NS}SET_UPDATING_CONTENT`)
-export const setActiveDialog = createAction(`${NS}SET_ACTIVE_DIALOG`)
-export const deleteDialogForm = createAction(`${NS}DELETE_DIALOG_FORM`)
-export const setLayoutState = createAction(`${NS}SET_LAYOUT_STATE`)
+export const setUserState = createAction(`${NS}SET_USER_STATE`);
+export const setUpdatingContent = createAction(`${NS}SET_UPDATING_CONTENT`);
+export const setActiveDialog = createAction(`${NS}SET_ACTIVE_DIALOG`);
+export const deleteDialogForm = createAction(`${NS}DELETE_DIALOG_FORM`);
+export const setLayoutState = createAction(`${NS}SET_LAYOUT_STATE`);
 
 export const setLoading = isLoading => {
-  const action = _setLoading(isLoading)
-  action[pendingTask] = isLoading ? begin : end
+  const action = _setLoading(isLoading);
+  action[pendingTask] = isLoading ? begin : end;
   return action
 }
 
@@ -39,7 +39,7 @@ export const initAuth = roles => (dispatch, getState) => {
   // Use Axios there to get User Data by Auth Token with Bearer Method Authentication
 
   const userRole = window.localStorage.getItem('app.Role')
-  const state = getState()
+  const state = getState();
 
   const users = {
     administrator: {
@@ -71,28 +71,28 @@ export const initAuth = roles => (dispatch, getState) => {
 
   switch (userRole) {
     case 'administrator':
-      return setUser(users.administrator, userRole)
+      return setUser(users.administrator, userRole);
 
     case 'agent':
-      return setUser(users.agent, userRole)
+      return setUser(users.agent, userRole);
 
     default:
-      const location = state.routing.location
-      const from = location.pathname + location.search
-      dispatch(_setFrom(from))
-      dispatch(push('/login'))
+      const location = state.routing.location;
+      const from = location.pathname + location.search;
+      dispatch(_setFrom(from));
+      dispatch(push('/login'));
       return Promise.reject()
   }
 }
 
 export function login(username, password, dispatch) {
   // Use Axios there to get User Auth Token with Basic Method Authentication
-  dispatch(_loginAuthPending(''))
+  dispatch(_loginAuthPending(''));
   return api.loginAuth().then(
     (response) => {
       if (username === 'admin@mediatec.org' && password === '123123') {
-        window.localStorage.setItem('app.Authorization', '')
-        window.localStorage.setItem('app.Role', 'administrator')
+        window.localStorage.setItem('app.Authorization', '');
+        window.localStorage.setItem('app.Role', 'administrator');
         //dispatch(_setHideLogin(true))
         //dispatch(push('/dashboard'))
         notification.open({
@@ -100,18 +100,17 @@ export function login(username, password, dispatch) {
           message: 'You have successfully logged in!',
           description:
             'Welcome to the Clean UI Admin Template. The Clean UI Admin Template is a complimentary template that empowers developers to make perfect looking and useful apps!',
-        })
-        dispatch(_loginAuthSuccess(response))
+        });
+        dispatch(_loginAuthSuccess(response));
         return true
       }
     }
   ).catch(error => {
-    dispatch(_loginAuthFailure(error))
+    dispatch(_loginAuthFailure(error));
+    dispatch(push('/login'));
+    dispatch(_setFrom(''));
+    return false
   })
-  
-  dispatch(push('/login'))
-  dispatch(_setFrom(''))
-  return false
 }
 
 export const logout = () => (dispatch, getState) => {

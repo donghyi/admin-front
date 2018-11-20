@@ -1,24 +1,24 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { REDUCER, submit } from 'ducks/login'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button } from 'antd'
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 const mapStateToProps = (state, props) => ({
   isSubmitForm: state.app.submitForms['pending'],
   isError : state.app.submitForms['error'],
-})
+});
 
 @connect(mapStateToProps)
 @Form.create()
 class LoginForm extends React.Component {
-  static defaultProps = {}
+  static defaultProps = {};
 
   // $FlowFixMe
   onSubmit = (isSubmitForm: ?boolean) => event => {
-    event.preventDefault()
-    const { form, dispatch } = this.props
+    event.preventDefault();
+    const { form, dispatch } = this.props;
     if (!isSubmitForm) {
       form.validateFields((error, values) => {
         if (!error) {
@@ -26,18 +26,10 @@ class LoginForm extends React.Component {
         }
       })
     }
-  }
-
-  showErrorMessage = () => {
-    console.log("showErrorMessage")
-    message.error("로그인 실패!");
-  }
+  };
 
   render() {
-    console.log("this.props = ", this.props);
-    const { showErrorMessage } = this;
-    const { form, isSubmitForm, isError } = this.props
-
+    const { form, isSubmitForm, isError } = this.props;
     return (
       <div className="cat__pages__login__block__form">
         <h4 className="text-uppercase">
@@ -67,7 +59,7 @@ class LoginForm extends React.Component {
             })(<Input size="default" type="password" />)}
           </FormItem>
           <div className="mb-2">
-          {isError && showErrorMessage()}
+            {isError && <div className="login-fail"><strong>로그인 실패</strong></div>}
           </div>
           <div className="mb-2">
             <a href="javascript: void(0);" className="utils__link--blue utils__link--underlined">
