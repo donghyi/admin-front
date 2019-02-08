@@ -7,7 +7,7 @@ import * as api from 'lib/api';
 const REDUCER = 'app';
 const NS = `@@${REDUCER}/`;
 
-const _setFrom = createAction(`${NS}SET_FROM`);
+const _setFrom = createAction(`${NS}SET_FROM`, api.loginAuth);
 const _setLoading = createAction(`${NS}SET_LOADING`);
 const _setHideLogin = createAction(`${NS}SET_HIDE_LOGIN`);
 
@@ -37,7 +37,6 @@ export const resetHideLogin = () => (dispatch, getState) => {
 
 export const initAuth = roles => (dispatch, getState) => {
   // Use Axios there to get User Data by Auth Token with Bearer Method Authentication
-
   const userRole = window.localStorage.getItem('app.Role')
   const state = getState();
 
@@ -85,25 +84,35 @@ export const initAuth = roles => (dispatch, getState) => {
   }
 }
 
-export function login(username, password, dispatch) {
+export function login(user_id, user_pwd, dispatch) {
   // Use Axios there to get User Auth Token with Basic Method Authentication
   dispatch(_loginAuthPending(''));
-  return api.loginAuth().then(
+  return api.loginAuth({user_id, user_pwd}).then(
     (response) => {
-      if (username === 'admin@mediatec.org' && password === '123123') {
-        window.localStorage.setItem('app.Authorization', '');
-        window.localStorage.setItem('app.Role', 'administrator');
-        //dispatch(_setHideLogin(true))
-        //dispatch(push('/dashboard'))
-        notification.open({
-          type: 'success',
-          message: 'You have successfully logged in!',
-          description:
-            'Welcome to the Clean UI Admin Template. The Clean UI Admin Template is a complimentary template that empowers developers to make perfect looking and useful apps!',
-        });
-        dispatch(_loginAuthSuccess(response));
-        return true
-      }
+        const data =response.data;
+        const status = data.status;
+        const message = data.message;
+        if(status === 200){
+            const access_token_key = data.data.access_token_key;
+            window.localStorage.setItem('access_token_key', access_token_key);
+            window.localStorage.setItem('app.Authorization', '');
+            window.localStorage.setItem('app.Role', 'administrator');
+            dispatch(_setHideLogin(true));
+            dispatch(push('/dashboard'));
+            notification.open({
+                type: 'success',
+                message: 'You have successfully logged in!',
+                description:
+                    'Welcome to the Clean UI Admin Template. The Clean UI Admin Template is a complimentary template that empowers developers to make perfect looking and useful apps!',
+            });
+            dispatch(_loginAuthSuccess(response));
+            return true
+        }else{
+            dispatch(_loginAuthFailure(message));
+            dispatch(push('/login'));
+            dispatch(_setFrom(''));
+            return false
+        }
     }
   ).catch(error => {
     dispatch(_loginAuthFailure(error));
@@ -188,7 +197,6 @@ export default createReducer(
       return { ...state, dialogForms }
     },
     [_loginAuthPending] : (state, pending) => {
-      console.log("_loginAuthPending")
       const submitForms = { ...state.submitForms, pending : true, error : false }
       return { 
         ...state,
@@ -196,7 +204,6 @@ export default createReducer(
       }
     },
     [_loginAuthSuccess] : (state, payload) => {
-      console.log("_loginAuthSuccess")
       const submitForms = { ...state.submitForms, pending : false, data : payload}
       return { 
         ...state,
@@ -204,7 +211,6 @@ export default createReducer(
       }
     },
     [_loginAuthFailure] : (state, error) => {
-      console.log("_loginAuthFailure");
       const submitForms = { ...state.submitForms, pending : false, error : true}
       return { 
         ...state,

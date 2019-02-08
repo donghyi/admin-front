@@ -1,4 +1,3 @@
 import axios from 'axios';
-import queryString from 'query-string';
 
-export const loginAuth = () => axios.post('/cdnservice/auth/adminLogin');
+export const loginAuth = ({user_id, user_pwd}) => axios.post('/auth/login',{user_id, user_pwd});

@@ -67,5 +67,5 @@
       "prettier --tab-width 2 --print-width 100 --single-quote --trailing-comma all --no-semi --parser babylon --write"
     ]
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080/cdnservice"
 }
