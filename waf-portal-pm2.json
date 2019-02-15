@@ -1,0 +1,9 @@
+{
+  "apps":[
+    {
+      "name" : "waf-portal",
+      "script" : "yarn",
+      "args" : "start"
+    }
+  ]
+}
